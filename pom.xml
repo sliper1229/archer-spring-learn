@@ -13,6 +13,7 @@
     <module>jetty-demo</module>
     <module>jetty-demo2</module>
     <module>spring-v2.1</module>
+    <module>spring-v2.2</module>
   </modules>
 
   <name>archer-spring-learn</name>

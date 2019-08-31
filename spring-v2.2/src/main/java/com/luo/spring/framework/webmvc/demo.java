@@ -1,4 +1,4 @@
-package com.luo.spring.framework.beans;
+package com.luo.spring.framework.webmvc;
 
 import java.io.Serializable;
 
