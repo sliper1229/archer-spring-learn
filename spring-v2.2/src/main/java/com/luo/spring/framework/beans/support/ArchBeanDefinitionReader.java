@@ -88,7 +88,7 @@ public class ArchBeanDefinitionReader {
                     //如果是多个实现类，只能覆盖
                     //为什么？因为Spring没那么智能，就是这么傻
                     //这个时候，可以自定义名字
-                    //i.getName()是接口的全路径 如：com.luo.spring.demo.service.IQueryService  有可能有错误
+                    //i.getName()是接口的全路径 如：com.luo.IQueryService  有可能有错误
                     //我将i.getName()改成了i.getSimpleName()
                     result.add(doCreateBeanDefinition(i.getName(),beanClass.getName()));
                 }
@@ -129,5 +129,9 @@ public class ArchBeanDefinitionReader {
         //在Java中，对char做算学运算，实际上就是对ASCII码做算学运算
         chars[0] += 32;
         return String.valueOf(chars);
+    }
+
+    public Properties getConfig() {
+        return this.config;
     }
 }

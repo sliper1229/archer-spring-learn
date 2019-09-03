@@ -12,6 +12,9 @@
     <module>spring-v1</module>
     <module>jetty-demo</module>
     <module>jetty-demo2</module>
+      <module>spring-v2.3</module>
+    <module>spring-tx</module>
+    <module>spring-orm</module>
     <module>spring-v2.1</module>
     <module>spring-v2.2</module>
   </modules>

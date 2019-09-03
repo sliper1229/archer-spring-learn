@@ -13,6 +13,7 @@ import com.luo.spring.framework.core.ArchBeanFactory;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -147,6 +148,7 @@ public class ArchApplicationContext extends ArchDefaultListableBeanFactory imple
         instance = instantiateBean(beanName,archBeanDefinition);
 
         //2、把这个对象封装到BeanWrapper中
+        //初始化之后应该可以直接取了，不需要再重新包装  todo
         ArchBeanWrapper beanWrapper = new ArchBeanWrapper(instance);
 
         //singletonObjects
@@ -240,6 +242,15 @@ public class ArchApplicationContext extends ArchDefaultListableBeanFactory imple
         }
 
         return instance;
+    }
+
+
+    public String[] getBeanDefinitionNames() {
+        return this.beanDefinitionMap.keySet().toArray(new  String[this.beanDefinitionMap.size()]);
+    }
+
+    public Properties getConfig(){
+        return this.reader.getConfig();
     }
 
 }
