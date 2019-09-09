@@ -3,6 +3,11 @@ package com.luo.spring.framework.context;
 import com.luo.spring.framework.annotation.ArchAutowired;
 import com.luo.spring.framework.annotation.ArchController;
 import com.luo.spring.framework.annotation.ArchService;
+import com.luo.spring.framework.aop.ArchAopProxy;
+import com.luo.spring.framework.aop.ArchCglibAopProxy;
+import com.luo.spring.framework.aop.ArchJdkDynamicAopProxy;
+import com.luo.spring.framework.aop.config.ArchAopConfig;
+import com.luo.spring.framework.aop.support.ArchAdviseSupport;
 import com.luo.spring.framework.beans.ArchBeanWrapper;
 import com.luo.spring.framework.beans.config.ArchBeanDefinition;
 import com.luo.spring.framework.beans.config.ArchBeanPostProcessor;
@@ -13,6 +18,7 @@ import com.luo.spring.framework.core.ArchBeanFactory;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -29,7 +35,7 @@ public class ArchApplicationContext extends ArchDefaultListableBeanFactory imple
     private ArchBeanDefinitionReader reader;
 
     //单例的IOC容器缓存
-    private Map<String,Object> singletonObjects = new ConcurrentHashMap<String, Object>();
+    private Map<String,Object> factoryBeanObjectCache = new ConcurrentHashMap<String, Object>();
 
     //通用的IOC容器
     private Map<String, ArchBeanWrapper> factoryBeanInstanceCache = new ConcurrentHashMap<String, ArchBeanWrapper>();
@@ -227,19 +233,57 @@ public class ArchApplicationContext extends ArchDefaultListableBeanFactory imple
         try {
 //            archBeanDefinition.getFactoryBeanName()
             //假设默认就是单例,细节暂且不考虑，先把主线拉通
-            if(this.singletonObjects.containsKey(className)){
-                instance = this.singletonObjects.get(className);
+            if(this.factoryBeanObjectCache.containsKey(className)){
+                instance = this.factoryBeanObjectCache.get(className);
             }else {
                 Class<?> clazz = Class.forName(className);
                 instance = clazz.newInstance();
-                this.singletonObjects.put(className,instance);
-                this.singletonObjects.put(archBeanDefinition.getFactoryBeanName(),instance);
+
+                ArchAdviseSupport config = instantionAopConfig(archBeanDefinition);
+                config.setTargetClass(clazz);
+                config.setTarget(instance);
+
+                //符合PointCut的规则的话，创建代理对象
+                if(config.pointCutMatch()) {
+                    instance = createProxy(config).getProxy();
+                }
+                
+                this.factoryBeanObjectCache.put(className,instance);
+                this.factoryBeanObjectCache.put(archBeanDefinition.getFactoryBeanName(),instance);
             }
         }catch (Exception e){
             e.printStackTrace();
         }
 
         return instance;
+    }
+
+    private ArchAopProxy createProxy(ArchAdviseSupport config) {
+
+        Class targetClass = config.getTargetClass();
+        if(targetClass.getInterfaces().length > 0){
+            return new ArchJdkDynamicAopProxy(config);
+        }
+        return new ArchCglibAopProxy(config);
+    }
+
+    private ArchAdviseSupport instantionAopConfig(ArchBeanDefinition gpBeanDefinition) {
+        ArchAopConfig config = new ArchAopConfig();
+        config.setPointCut(this.reader.getConfig().getProperty("pointCut"));
+        config.setAspectClass(this.reader.getConfig().getProperty("aspectClass"));
+        config.setAspectBefore(this.reader.getConfig().getProperty("aspectBefore"));
+        config.setAspectAfter(this.reader.getConfig().getProperty("aspectAfter"));
+        config.setAspectAfterThrow(this.reader.getConfig().getProperty("aspectAfterThrow"));
+        config.setAspectAfterThrowingName(this.reader.getConfig().getProperty("aspectAfterThrowingName"));
+        return new ArchAdviseSupport(config);
+    }
+
+    public String[] getBeanDefinitionNames() {
+        return this.beanDefinitionMap.keySet().toArray(new  String[this.beanDefinitionMap.size()]);
+    }
+
+    public Properties getConfig(){
+        return this.reader.getConfig();
     }
 
 }
