@@ -17,6 +17,7 @@
     <module>spring-orm</module>
     <module>spring-v2.1</module>
     <module>spring-v2.2</module>
+      <module>spring5</module>
   </modules>
 
   <name>archer-spring-learn</name>
