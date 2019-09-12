@@ -2,7 +2,7 @@ package com.luo.spring.demo.service;
 
 /**
  * 查询业务
- * @author Tom
+ * @author ARCHER
  *
  */
 public interface IQueryService {
