@@ -19,7 +19,6 @@
     <properties>
         <!-- dependency versions -->
         <spring.version>5.0.2.RELEASE</spring.version>
-        <servlet.api.version>3.1.0</servlet.api.version>
         <jackson.version>2.9.5</jackson.version>
     </properties>
 
@@ -62,17 +61,6 @@
             <scope>test</scope>
         </dependency>
         <!-- spring framework end -->
-
-
-        <!-- requied start -->
-
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>${servlet.api.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <!-- requied end -->
 
 
         <!-- apache commons start -->
