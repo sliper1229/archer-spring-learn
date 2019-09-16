@@ -16,6 +16,15 @@ import javax.servlet.http.HttpSession;
  **/
 public class LoginInterceptor implements HandlerInterceptor {
 
+
+    /**
+     * 该方法将在请求处理之前进行调用
+     * @param request 请求
+     * @param response 响应
+     * @param o handler 操作
+     * @return true继续进入下一个拦截器的preHandle方法或者进入对应的Controller方法，false终止请求
+     * @throws Exception
+     */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object o) throws Exception {
         //获取请求的RUi:去除http:localhost:8080这部分剩下的
@@ -37,11 +46,29 @@ public class LoginInterceptor implements HandlerInterceptor {
         return false;
     }
 
+
+    /**
+     * 在调用Controller方法后，在DispatcherServlet 进行视图返回渲染视图前进行调用
+     * @param httpServletRequest 请求
+     * @param httpServletResponse 响应
+     * @param o handler 操作
+     * @param modelAndView 视图
+     * @throws Exception
+     */
     @Override
     public void postHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, ModelAndView modelAndView) throws Exception {
 
     }
 
+
+    /**
+     * 在视图渲染后调用
+     * @param httpServletRequest 请求
+     * @param httpServletResponse 响应
+     * @param o handler 操作
+     * @param e
+     * @throws Exception
+     */
     @Override
     public void afterCompletion(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, Exception e) throws Exception {
 
