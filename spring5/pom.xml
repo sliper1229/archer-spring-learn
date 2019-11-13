@@ -19,7 +19,7 @@
     <properties>
         <!-- dependency versions -->
         <spring.version>5.0.2.RELEASE</spring.version>
-        <jackson.version>2.9.5</jackson.version>
+        <jackson.version>2.10.1</jackson.version>
     </properties>
 
     <dependencies>
